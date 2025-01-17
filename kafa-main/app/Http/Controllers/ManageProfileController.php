@@ -17,12 +17,11 @@ class ManageProfileController extends Controller
      */
     public function index()
     {
-        // Retrieve users who are parents
-        $parents = Parents::all();
+        // Retrieve all users with the role of 'parent'
+        $parents = User::where('role', 'parent')->get();
 
-        // Retrieve users who are teachers
-        $teachers = Teacher::all();
-
+         // Retrieve all users with the role of 'teacher'
+        $teachers = User::where('role', 'teacher')->get();
 
         // Pass data to the view
         return view('ManageProfile.Kafa Admin.ParentTeacherList', compact('parents', 'teachers'));
@@ -31,8 +30,8 @@ class ManageProfileController extends Controller
 
     public function showParentDetail($id)
     {
-        // Retrieve the parent based on the provided ID
-        $parent = Parents::findOrFail($id);
+        // Retrieve the user with the role of 'parent' by ID
+        $parent = User::where('id', $id)->where('role', 'parent')->firstOrFail();
 
         // Pass the parent details to the view
         return view('ManageProfile.Kafa Admin.UserDetail', compact('parent'));
@@ -44,7 +43,7 @@ class ManageProfileController extends Controller
     public function showTeacherDetail($id)
     {
         // Fetch the teacher details from the database based on the provided ID
-        $teacher = Teacher::findOrFail($id);
+        $teacher = User::where('id', $id)->where('role', 'teacher')->firstOrFail();
 
         // Pass the teacher details to the view
         return view('ManageProfile.Kafa Admin.UserDetail', compact('teacher'));
@@ -102,13 +101,15 @@ class ManageProfileController extends Controller
 
     public function editParent($id)
     {
-        $parent = $this->getParent($id);
+        $parent = User::where('id', $id)->where('role', 'parent')->firstOrFail();
+
         return view('ManageProfile.Kafa Admin.editProfile', compact('parent'));
     }
 
     public function editTeacher($id)
     {
-        $teacher = $this->getTeacher($id);
+        $teacher = User::where('id', $id)->where('role', 'teacher')->firstOrFail();
+        
         return view('ManageProfile.Kafa Admin.editProfile', compact('teacher'));
     }
 
@@ -120,7 +121,7 @@ class ManageProfileController extends Controller
 
     private function getTeacher(string $id)
     {
-        return Teacher::find($id);
+        return Teacher::with('user')->find($id);
     }
 
 
@@ -139,14 +140,20 @@ class ManageProfileController extends Controller
             'relation' => 'nullable|string|max:255',
         ]);
 
-        $parent = Parents::find($id);
+        // Find the parent by the user ID
+        $parent = User::where('id', $id)->where('role', 'parent')->firstOrFail();
+
+       // Find the parent details related to this user
+        $parent = Parent::where('user_id', $user->id)->firstOrFail();
+
+
         if ($parent) {
-            $parent->user->name = $request->input('name');
+            // Also update the parent user's name if needed
             $parent->parentIC = $request->input('parentIC');
             $parent->phoneNo = $request->input('phoneNo');
             $parent->address = $request->input('address');
             $parent->relation = $request->input('relation');
-            $parent->user->save();
+            
             $parent->save();
 
             return redirect()->route('profile.showParent', $id)->with('success', 'Details updated successfully');
@@ -164,12 +171,18 @@ class ManageProfileController extends Controller
             'educationLevel' => 'nullable|string|max:255',
         ]);
 
-        $teacher = Teacher::find($id);
+        // Find the user with the given ID (who is a teacher)
+        $teacher = User::where('id', $id)->where('role', 'teacher')->firstOrFail();
+
+        // Find the parent details related to this user
+        $teacher = Teacher::where('user_id', $user->id)->firstOrFail();
+
         if ($teacher) {
             $teacher->fullname = $request->input('fullname');
             $teacher->gender = $request->input('gender');
             $teacher->address = $request->input('address');
             $teacher->educationLevel = $request->input('educationLevel');
+            
             $teacher->save();
 
             return redirect()->route('profile.showTeacher', $id)->with('success', 'Details updated successfully');

@@ -20,7 +20,7 @@
                                 <div class="form-group">
                                     <label for="name">Name</label>
                                     <input type="text" class="form-control" id="name" name="name"
-                                        value="{{ $parent->user->name }}">
+                                        value="{{ $parent->name }}">
                                 </div>
                                 <div class="form-group">
                                     <label for="parentIC">Parent IC</label>
