@@ -73,9 +73,11 @@
                             <div class="form-floating flex-fill">
                                 <select class="form-select @error('role') is-invalid @enderror" name="role"
                                     id="role" aria-label="Floating label select example" required>
-                                    <option value="Teacher" {{ old('role') == 'Teacher' ? 'selected' : '' }}>Teacher
-                                    </option>
+                                    <option value="Teacher" {{ old('role') == 'Teacher' ? 'selected' : '' }}>Teacher</option>
                                     <option value="Parent" {{ old('role') == 'Parent' ? 'selected' : '' }}>Parent</option>
+                                    <option value="Kafa" {{ old('role') == 'Kafa' ? 'selected' : '' }}>Kafa Admin</option>
+                                    <option value="Muip" {{ old('role') == 'Muip' ? 'selected' : '' }}>Muip Admin</option>
+                                  </select>
                                 </select>
                                 <label for="role">Role</label>
                                 @error('role')

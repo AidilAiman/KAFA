@@ -59,4 +59,11 @@ class User extends Authenticatable
     {
         return $this->hasOne(MuipAdmin::class);
     }
+
+    public function scopeParents($query)
+    {
+        return $query->where('role', 'parent');
+    }
+
 }
+

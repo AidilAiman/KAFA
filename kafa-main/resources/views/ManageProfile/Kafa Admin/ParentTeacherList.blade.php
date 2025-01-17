@@ -12,7 +12,7 @@
                         <div class="list-group" id="parentList">
                             @foreach ($parents as $parent)
                                 <div class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
-                                    <span>{{ $parent->user->name }}</span>
+                                    <span>{{ $parent->name }}</span>
                                     <div class="btn-group" role="group" aria-label="Parent Actions">
                                         <a href="{{ route('profile.editParent', $parent->id) }}" class="btn btn-primary mr-2">Edit</a>
                                         <form action="{{ route('profile.delete', $parent->id) }}" method="POST" id="deleteForm{{ $parent->id }}">
@@ -38,7 +38,7 @@
                         <div class="list-group" id="teacherList">
                             @foreach ($teachers as $teacher)
                                 <div class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
-                                    <span>{{ $teacher->fullname }}</span>
+                                    <span>{{ $teacher->name }}</span>
                                     <div class="btn-group" role="group" aria-label="Teacher Actions">
                                         <a href="{{ route('profile.editTeacher', $teacher->id) }}" class="btn btn-primary mr-2">Edit</a>
                                         <form action="{{ route('profile.delete', $teacher->id) }}" method="POST" id="deleteForm{{ $teacher->id }}">
